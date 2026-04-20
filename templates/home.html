@@ -2,84 +2,107 @@
 <html>
 <head>
     <title>Student Performance Predictor</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 
 <body>
-    <div class="login">
-        <h1>Student Exam Performance Indicator</h1>
-
-        <form action="/predictdata" method="post">
-
-            <h2>Student Exam Performance Prediction</h2>
-
-            <div>
-                <label>Gender</label>
-                <select name="gender" required>
-                    <option value="" disabled selected>Select your Gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                </select>
+    <div class="container">
+        <div class="topbar">
+            <div class="brand">
+                <div class="badge"><strong>Predict</strong> Math Score</div>
             </div>
+            <a class="badge" href="/" aria-label="Back to home">Home</a>
+        </div>
 
-            <div>
-                <label>Race or Ethnicity</label>
-                <select name="race_ethnicity" required>
-                    <option value="" disabled selected>Select Ethnicity</option>
-                    <option value="group A">Group A</option>
-                    <option value="group B">Group B</option>
-                    <option value="group C">Group C</option>
-                    <option value="group D">Group D</option>
-                    <option value="group E">Group E</option>
-                </select>
+        <div class="card">
+            <div class="card__header">
+                <h1>Student Exam Performance</h1>
+                <p>Fill in the details below to get a predicted math score. Inputs are validated and use the same preprocessing as training.</p>
             </div>
+            <div class="card__body">
+                <form action="/predictdata" method="post">
+                    <div class="grid">
+                        <div class="field">
+                            <label>Gender</label>
+                            <select name="gender" required>
+                                <option value="" disabled selected>Select your Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
 
-            <div>
-                <label>Parental Level of Education</label>
-                <select name="parental_level_of_education" required>
-                    <option value="" disabled selected>Select Parent Education</option>
-                    <option value="associate's degree">Associate's degree</option>
-                    <option value="bachelor's degree">Bachelor's degree</option>
-                    <option value="high school">High school</option>
-                    <option value="master's degree">Master's degree</option>
-                    <option value="some college">Some college</option>
-                    <option value="some high school">Some high school</option>
-                </select>
-            </div>
+                        <div class="field">
+                            <label>Race or Ethnicity</label>
+                            <select name="race_ethnicity" required>
+                                <option value="" disabled selected>Select Ethnicity</option>
+                                <option value="group A">Group A</option>
+                                <option value="group B">Group B</option>
+                                <option value="group C">Group C</option>
+                                <option value="group D">Group D</option>
+                                <option value="group E">Group E</option>
+                            </select>
+                        </div>
 
-            <div>
-                <label>Lunch Type</label>
-                <select name="lunch" required>
-                    <option value="" disabled selected>Select Lunch Type</option>
-                    <option value="free/reduced">Free/Reduced</option>
-                    <option value="standard">Standard</option>
-                </select>
-            </div>
+                        <div class="field">
+                            <label>Parental Level of Education</label>
+                            <select name="parental_level_of_education" required>
+                                <option value="" disabled selected>Select Parent Education</option>
+                                <option value="associate's degree">Associate's degree</option>
+                                <option value="bachelor's degree">Bachelor's degree</option>
+                                <option value="high school">High school</option>
+                                <option value="master's degree">Master's degree</option>
+                                <option value="some college">Some college</option>
+                                <option value="some high school">Some high school</option>
+                            </select>
+                        </div>
 
-            <div>
-                <label>Test Preparation Course</label>
-                <select name="test_preparation_course" required>
-                    <option value="" disabled selected>Select Test Course</option>
-                    <option value="none">None</option>
-                    <option value="completed">Completed</option>
-                </select>
-            </div>
-            <div>
-                <label>Reading Score (0–100)</label>
-                <input type="number" name="reading_score" min="0" max="100" required />
-            </div>
-            <div>
-                <label>Writing Score (0–100)</label>
-                <input type="number" name="writing_score" min="0" max="100" required />
-            </div>
-            <div>
-                <button type="submit">Predict Maths Score</button>
-            </div>
+                        <div class="field">
+                            <label>Lunch Type</label>
+                            <select name="lunch" required>
+                                <option value="" disabled selected>Select Lunch Type</option>
+                                <option value="free/reduced">Free/Reduced</option>
+                                <option value="standard">Standard</option>
+                            </select>
+                        </div>
 
-        </form>
-        {% if result %}
-            <h2>Prediction: {{ result }}</h2>
-        {% endif %}
+                        <div class="field">
+                            <label>Test Preparation Course</label>
+                            <select name="test_preparation_course" required>
+                                <option value="" disabled selected>Select Test Course</option>
+                                <option value="none">None</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
 
+                        <div class="field">
+                            <label>Reading Score (0–100)</label>
+                            <input type="number" name="reading_score" min="0" max="100" placeholder="e.g., 72" required />
+                        </div>
+
+                        <div class="field">
+                            <label>Writing Score (0–100)</label>
+                            <input type="number" name="writing_score" min="0" max="100" placeholder="e.g., 68" required />
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button class="btn btn--primary" type="submit">Predict Math Score</button>
+                        <a class="btn" href="/">Cancel</a>
+                    </div>
+
+                    <div class="helper">Predictions are based on the trained model in <code>artifacts/model.pkl</code>.</div>
+                </form>
+
+                {% if result %}
+                    <div class="result" role="status" aria-live="polite">
+                        <strong>Predicted math score</strong>
+                        <div class="score">{{ result }}</div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </body>
 </html>
